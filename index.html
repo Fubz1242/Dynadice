@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynadice FP Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 10px; background: #f2f2f2; }
+    input, button, select { font-size: 18px; margin: 6px 0; width: 100%; padding: 8px; }
+    #result { margin-top: 12px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>🎲 Dynadice FP Edition</h2>
+  <input id="desc" placeholder="Bet Description">
+  <input id="odds" placeholder="Odds (e.g. 2.40)">
+  <input id="winprob" placeholder="Win % (e.g. 60)">
+  <input id="bankroll" placeholder="Bankroll (e.g. 500)">
+  <select id="last"><option value="win">Last: Win</option><option value="loss">Last: Loss</option></select>
+  <button onclick="analyze()">ANALYZE MY BET</button>
+  <pre id="result"></pre>
+
+  <script>
+    function analyze(){
+      let odds = parseFloat(document.getElementById('odds').value);
+      let p = parseFloat(document.getElementById('winprob').value)/100;
+      let bankroll = parseFloat(document.getElementById('bankroll').value);
+      let ev = p*(odds-1) - (1-p);
+      let kelly = ((odds-1)*p - (1-p)) / (odds-1);
+      let bet = Math.max(0, bankroll * kelly);
+      let signal = ev > 0 ? '🟢 BET' : '🔴 SKIP';
+      document.getElementById('result').textContent =
+        `EV: ${ev.toFixed(2)}\nBet size: $${bet.toFixed(2)}\nSignal: ${signal}`;
+    }
+  </script>
+</body>
+</html>
